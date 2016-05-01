@@ -21,83 +21,58 @@ Note: PID controllers will also be used to yaw by using a trade off system to ma
 
 First things first, buckle up. This might take a while to get through. 
 
-First off, we need a space to represent our multicopter. We will be using R^3 space to do this. The center of the multicopter is at (0,0,0), naturally. Any sensors or motors are represented by Sn and Mn respectfully. For any Sn or Mn there should be an x, y, and z coordinate specified. This is the distance from the center of the craft to the sensor or motor in the x, y, or z direction. The positive x direction is the forward direction of the craft, positive y is left, positive z is up. Every other direction can be extrapolated from there. 
+The mathematics used in this control scheme is designed with complete comprehensiveness in mind. However, that wasn't found to be completely achieveable, which will be discussed further down. 
 
-The craft will have two representations, the current location represented by the x-y plane, and the future location which will also be specified by a plane of our choosing. The future plane is specified by giving a desired velocity vector relative to the craft. We will call this vector v = <m, n, o>, as is common in physics. However, this velocity vector is not in terms of veloctity, but rather the amount of power that should be sent to the motors as we can't always guarentee reaching a velocity, or maintaing it for that matter. In some implementations that rely on 8 bit integers, this vector will only represent the direction the craft should fly in, and the scalar portion of the velocity, |v|, will be provided in another variable. This allows the system to utilize all of its power in a controlled fasion. This is because if v = <127,127,127> then |v| = 219.97 which is just under 255 which is the maximum unsigned number available for an 8 bit variable.  
+The first concept that needs to be explained is that the target force vector is relative to the craft. If, for example, the craft is to go straight up in the global coordinate system, the vector will have to be translated to the craft's local coordinate system first. If the craft is facing upside down in this example, then the target force vector will be straight down relative to the craft. This guide does not discuss converting between local and global space yet.
 
-The future plane also comes with future representations of any Mn and Sn, these will be notated as FMn and FSn. There are two ways to calculate the error between any Mn and FMn. The first way is to simply use a straight line between the two and find its length and use that as the error, the second way is to calculate the arc length between the Mn and FMn. In order to do such a thing, we should define some equations. 
+In order to more easily explain the control scheme, it will be split into four parts
+* Finding target angle error.
+* Finding rotation arc radius for each motor.
+* Finding rotation arc angle for each motor.
+* Determine whether the motor shall rise or fall.
 
-A plane with normal vector <a,b,c> and including the point (x0,y0,z0) is found by using: a(x-x0) + b(y-y0) + c(z-z0) = 0
+#####Part One: Finding target angle error
 
-The x-y plane has the normal <0,0,1>, and contains the point (0,0,0). It is defined as: z = 0
+The first part of the control scheme is relatively simple. Finding the whole craft's error in terms of an angle. 
 
-The future plane has the normal v = <m, n, o> and contains the point (0,0,0). It is defined as: mx + ny + cz = 0
+This error is the angle between the normal vector of the craft and the target vector. 
 
-The axis the craft should rotate around is the intersection between these two planes. The intersection of these two planes is:
+In order to find this error, the function is 
 
-mx + ny = 0
+Cos^-1(Tz/|***T***|)
 
-Solving for y, gets us 
+Where ***T*** = \<Tx, Ty, Tz\> is the target vector relative to the craft.
 
-y = -(m/n) x
+This function is derived from the definition of the dot product. 
 
-Likewise, solving for x gets 
+#####Part Two: Finding rotation arc radius for each motor.
 
-x = -(n/m) y
+Ix = (Ty * (Ty * Mx - Tx * My))/((Tx * Tx) + (Ty * Ty))
 
-These two equations are important for finding the x and y coordinants of the perpendicular intersection of the axis of rotation and a line that runs through any Mn. This is necessary for finding the radius of rotation around the axis for any Mn.
+Iy = (Tx * (Tx * My - Mx * Ty))/ ((Tx * Tx) + (Ty * Ty))
 
-The x and y coordiantates for any Mn will be defined as x1, y1, and z1.
+Where I = (Ix, Iy) is the point at which the rotation axis intersects the line that perpendicularly passes the rotation axis and passes through the motor at (Mx, My).
 
-The line that makes a perpendicular intersection with the axis from any Mn is defined as:
+These two points can be used to easily find a radius between the rotation axis and motor. 
 
-y - y1 = (n/m) * (x - x1)
+#####Part Three: Finding rotation arc angle for each motor.
 
-Solving for y gets us 
+Motor angle is found using the same trick used from above when finding the angle between the normal vector and the target vector. 
 
-y = (n/m) * (x - x1) + y1
+In this case, the motor angle is the angle between the target vector and the motor vector. 
 
-Solving for x gets us 
+Cos^-1((Tx * Mx + Ty * My + Tz * Mz)/(sqrt(Tx * Tx + Ty * Ty + Tz * Tz) * sqrt(Mx * Mx + My * My + Mz * Mz)))
 
-x = (n x1+m y-m y1)/n
+This will give an angle between 0 and PI. 
 
-With these, we may solve for x and y intersection points
+#####Part Four: Determine whether the motor shall rise or fall.
 
-Solving -(m/n) x = (n/m) * (x - x1) + y1 for x gets us
+In order to determine if the motor should rise or fall, simply subtract PI/2 from the motor angle. 
 
-x = (n (n x1-m y1))/(m^2+n^2)
+This will give a signed angle value. 
 
+#####Bring it all together
 
-Solving (n x1+m y-m y1)/n = -(n/m) y for y gets us 
+error = targetAngle * radius * motorAngle
 
-y = (m (-n x1+m y1))/(m^2+n^2)
-
-The z coordinate is always 0, so an equation does not need to be defined for it. 
-
-Another important concept is finding the coordinates of any FMn which may be done by using the plane we had defined above: 
-
- mx + ny + oz = 0
-
-In order to find the mapping of any x or y location you can simply multiply each by a coefficient. 
-
-The coefficient for an x coordinate can be found by the following 
-
-sqrt(1 + (n/o)^2)
-
-y coordinate
-
-sqrt(1 + (m/o)^2)
-
-Mapping the z 
-
-
-
-
-
-
-sqrt( (( (-b*(-bx+ay)) / ((-b)^2+a^2)) - x)^2 + ((a*(-bx+ay))/((-b)^2+a^2) - y)^2) * cos^-1(c/(sqrt(a^2+b^2+c^2))
-
-
-
-
-sqrt((a x+b y)^2/(a^2+b^2)) cos^(-1)(c/sqrt(a^2+b^2+c^2))
+//Discuss comprehensiveness
