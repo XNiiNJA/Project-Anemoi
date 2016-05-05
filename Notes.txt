@@ -1,0 +1,56 @@
+Angles are all assumed to be in radians. 
+
+X1 Y1 Z1 -> Normal Vector
+
+X2 Y2 Z2 -> Target Vector
+
+T = cos^-1(((X1 * X2) + (Y1 * Y2) + (Z1 * Z2))/(sqrt(X1^2 + Y1^2 + Z1^2) * sqrt(X2^2 + Y2^2 + Z2^2)))
+
+T -> Angle between vectors
+MTx -> Angle between target vector and Motor x 
+
+Mx My Mz -> Motor position in space
+
+MTx = cos^-1(((X1 * Mx) + (Y1 * My) + (Z1 * Mz))/(sqrt(X1^2 + Y1^2 + Z1^2) * sqrt(Mx + My + Mz)))
+
+(MTx - pi/2) -> Over or under zero. Over zero means positive thrust. Under zero means negative thrust. Zero means no thrust. 
+
+Angle we use =  (pi/2 - T) when MTx is MORE than 90 degrees
+             =  (T) when MTx is LESS than 90 degrees
+
+pi/2 - pi/2 + T
+
+ANGLE FORMULA = pi/2 - ((MTx - pi/2)/abs(MTx - pi/2) + 1)/2 * pi/2 + T
+
+((MTx - pi/2)/abs(MTx - pi/2) + 1)
+
+(MTx - pi/2)/abs(MTx - pi/2) 
+
+> 1 when MTx is MORE than 90 degrees
+> -1 when MTx is LESS than 90 degrees
+
+(pi/2 - MTx)/abs(MTx - pi/2)
+
+> 1 when MTx is LESS than 90 degrees
+> -1 when MTx is MORE than 90 degrees
+
+90 - 60 > 0
+
+90 - 100 < 0
+
+
+
+Error =  pi/2 - ((MTx - pi/2)/abs(MTx - pi/2) + 1)/2 * pi/2 + T * radius from center * (MTx - pi/2)/abs(MTx - pi/2)
+
+
+Error =  (pi/2 - ((A - pi/2)/abs(A - pi/2) + 1)/2 * pi/2 + T) * r * (A - pi/2)/abs(A - pi/2)
+
+This error function is undefined when the error is 0. 
+
+
+
+Angle between Target and Motor > pi/2 means Positive Error
+
+Angle between Target and Motor < pi/2 means Negative Error
+
+pi/2 is 90 degrees, which is usually easier to think about. 
