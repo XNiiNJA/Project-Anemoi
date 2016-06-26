@@ -75,4 +75,10 @@ This will give a signed angle value.
 
 error = targetAngle * radius * motorAngle
 
-//Discuss comprehensiveness
+####High-Level Control Concepts
+
+The math seen above is only the tip of the iceberg. It is, however, the core ideal of the entire control concept. With the currently covered math, one would be capable of issuing a vector relative to the multirotor's current orientation. Which, by itself, is relatively useless. We, instead, need a way to issue a point relative to the world. This point would then act as a target for the multirotor. Various control schemes could then be based off this concept. That global point could be an acceleration which is relative to the world. That global point could also be a velocity, or even a position. In fact, sometimes all three will need to be used together. 
+
+For example, if the goal is to control the velocity of the multirotor, then we must also be capable of controlling acceleration of the multirotor. We would control the velocity through the acceleration. This brings us to the use of multiple controllers. A controller on orientation, acceleration, and even velocity. The upper most controller, velocity, feeds into the next controller, acceleration. However, if the goal was to control the multirotor to lock at a location, we would have to add another controller for position. 
+
+This is the downside of this control scheme. Multiple PID controllers working in tandem. If tuned incorrectly, the problem could be very difficult to find. This being said, upper level control settings (i.e. position, velocity) should be capable of switching between different multirotor setups. Sharing control settings could even be facilitated by communities of multirotor enthusiasts in order to find better setups that they enjoy using, and they could even go as far as sharing control settings between different multirotor setups. So, pure startup time is astronomically higher than common control schemes. However, with the use of the internet, the control schemes of others could be easily used and traded between other users. This could either be thought of as a pro, or a con.
