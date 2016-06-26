@@ -241,10 +241,12 @@ public class FlightBehaviour : MonoBehaviour {
 
             float output = PCoef * proportional[i] + ICoef * integral[i] + DCoef * derivative[i];
 
-            if ((targetAngle / (Mathf.PI / 2)) > 0.25)
-                currentPower = 0;
+            //if ((targetAngle / (Mathf.PI / 2)) > 0.25)
+            //    currentPower = 0;
 
-            float appliedForce = output + currentPower;//((currentPower - currentPower * (targetAngle / Mathf.PI)) / objects.Length); //currentPower/objects.Length; //;
+            float appliedPower = currentPower * Tz/relativeTargetVector.magnitude;
+
+            float appliedForce = output + appliedPower;//((currentPower - currentPower * (targetAngle / Mathf.PI)) / objects.Length); //currentPower/objects.Length; //;
 
             Debug.Log((targetAngle / Mathf.PI) * 100);
 
