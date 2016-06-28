@@ -1,5 +1,7 @@
 # Project-Icarus
 
+Operates on port 58511
+
 This guide outlines the underlying mathematics of the control scheme used in the Icarus project. The mathematics used in this project heavily use 3d vectors, lines, and planes. Previous knowledge of such concepts is advised, however this guide will offer quick refreshers when needed for every new concept. 
 
 ###Section One: Philosophy
