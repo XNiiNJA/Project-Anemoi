@@ -1,15 +1,24 @@
 #include "kalmanfilter.h"
 #include <math.h>
+#include <Servo.h>
 #include <SPI.h> // Included for SFE_LSM9DS0 library
 #include <Wire.h>
 #include <SFE_LSM9DS0.h>
 #include "dimensionals.h"
 #include "quatops.h"
 #include "sensorhub.h"
+#include "MotorManager.h"
+#include "AbstractServo.h"
+
+#if defined(ARDUINO) && ARDUINO >= 100
+  #include "Arduino.h"
+#else
+  #include "WProgram.h"
+#endif
 
 #define NUM_MOTORS 4
 
-#define VERBOSE
+//#define VERBOSE
 
 float relativeVectorX, relativeVectorY, relativeVectorZ;
 
@@ -32,6 +41,8 @@ void setup() {
   Serial.begin(9600);
 
   SensorHub::init();
+
+  delay(1000);
 
   //positions in nearest cm.
   //41 cm long
@@ -60,6 +71,12 @@ void setup() {
   motorPositions[3].y = -20;
   motorPositions[3].z = 0;
 
+  MotorManager::init();
+
+  MotorManager::armAll();
+
+  MotorManager::setBasePower(0);
+
 }
 
 void loop() {
@@ -68,12 +85,18 @@ void loop() {
 
   SensorHub::update();
 
+//MotorManager::setBasePower((float)((sin((float)(millis() / 1000.0f)) + 1) / 2) * 10 + 5);
+  
+  MotorManager::update();
+
+  /*
   point targetPoint;
   targetPoint.x = 0;
   targetPoint.y = 0;
   targetPoint.z = 1;
 
   point relVect = SensorHub::globalToLocal(targetPoint);
+
 
   relativeVectorX = relVect.x;
   relativeVectorY = relVect.y;
@@ -103,13 +126,9 @@ void loop() {
     errors[i] = targetAngle * radius * motorAngle;
   }
 
-  long dur = millis() - loopStart;
+  long dur = millis() - loopStart;*/
 
 #ifdef VERBOSE
-
-  /*Serial.print("loop duration: ");
-  Serial.print(dur);
-  Serial.println(" millis\n");
 
   Serial.print("------Errors Calculated-----\n");
 
@@ -155,8 +174,6 @@ void loop() {
   
 
 #else
-
-    Serial.println(loops++);
     
    // loadJunk();
 

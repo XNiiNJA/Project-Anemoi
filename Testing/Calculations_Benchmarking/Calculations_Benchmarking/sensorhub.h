@@ -3,15 +3,15 @@
 *	Header file that takes in sensor readings and calculates orientations
 *	Author: Grant Oberhauser
 */
+#ifndef SENSORHUB_H
+#define SENSORHUB_H
+
 #include "dimensionals.h"
 #include "quatops.h"
 #include "kalmanfilter.h"
 #include <SPI.h> // Included for SFE_LSM9DS0 library
 #include <Wire.h>
 #include <SFE_LSM9DS0.h>
-
-#ifndef SENSORHUB_H
-#define SENSORHUB_H
 
 // SDO_XM and SDO_G are both grounded, so our addresses are:
 #define LSM9DS0_XM  0x1D // Would be 0x1E if SDO_XM is LOW

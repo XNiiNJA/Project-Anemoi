@@ -9,14 +9,24 @@
 
 #include <Servo.h>
 
-Servo myservo;  // create servo object to control a servo
+Servo servo1;  // create servo object to control a servo
+Servo servo2;  // create servo object to control a servo
+Servo servo3;  // create servo object to control a servo
+Servo servo4;  // create servo object to control a servo
+Servo servo5;  // create servo object to control a servo
+Servo servo6;  // create servo object to control a servo
 
 int output = 0; 
 int potpin = 0;  // analog pin used to connect the potentiometer
 int val;    // variable to read the value from the analog pin
 
 void setup() {
-  myservo.attach(3);  // attaches the servo on pin 9 to the servo object
+  servo1.attach(2);
+  servo2.attach(3);
+  servo3.attach(4);
+  servo4.attach(5);
+  servo5.attach(6);
+  servo6.attach(7);
   pinMode(8, OUTPUT);
   digitalWrite(8, HIGH);
   Serial.begin(9600);
@@ -29,6 +39,11 @@ void loop() {
      output = Serial.parseInt();
      Serial.println(output);
   }
-  myservo.writeMicroseconds(output);                  // sets the servo position according to the scaled value
+  servo1.writeMicroseconds(output);                  // sets the servo position according to the scaled value
+  servo2.writeMicroseconds(output);                  // sets the servo position according to the scaled value
+  servo3.writeMicroseconds(output);                  // sets the servo position according to the scaled value
+  servo4.writeMicroseconds(output);                  // sets the servo position according to the scaled value
+  servo5.writeMicroseconds(output);                  // sets the servo position according to the scaled value
+  servo6.writeMicroseconds(output);                  // sets the servo position according to the scaled value
 }
 
