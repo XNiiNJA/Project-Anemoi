@@ -1,18 +1,18 @@
-# Project-Icarus
+# Project-Anemoi
 
 Operates on port 58511
 
-This guide outlines the underlying mathematics of the control scheme used in the Icarus project. The mathematics used in this project heavily use 3d vectors, lines, and planes. Previous knowledge of such concepts is advised, however this guide will offer quick refreshers when needed for every new concept. 
+This guide outlines the underlying mathematics of the control scheme used in the Anemoi project. The mathematics used in this project heavily use 3d vectors, lines, and planes. Previous knowledge of such concepts is advised, however this guide will offer quick refreshers when needed for every new concept. 
 
 ###Section One: Philosophy
 
-Project Icarus is tasked with creating a new control scheme for latency heavy operation of unmanned multirotors. This control scheme is needed when trying to remotely control multicopters over a cellular connection or other packet switched networks. This is a departure from the already prevalent radio controlled multicopters which can rely on very low latency. Project Icarus, however, needs a semi-autonomous control scheme which is capable of intuitive control. Basically, Project Icarus needs to depart from the popular idea of allowing the pilot to use pitch, roll, and yaw. Instead, Project Icarus draws inspiration from the hit video game series Halo and the control scheme used in "Forge Mode". The aformentioned control scheme is very stable and also very intuitive. It does not involve roll, pitch, or yaw. Project Icarus instead places a layer of abstraction over pitching, rolling, and yawing, and instead allows the pilot to focus on the controls: forward, backward, left, right, up, and down. 
+Project Anemoi is tasked with creating a new control scheme for latency heavy operation of unmanned multirotors. This control scheme is needed when trying to remotely control multicopters over a cellular connection or other packet switched networks. This is a departure from the already prevalent radio controlled multicopters which can rely on very low latency. Project Anemoi, however, needs a semi-autonomous control scheme which is capable of intuitive control. Basically, Project Anemoi needs to depart from the popular idea of allowing the pilot to use pitch, roll, and yaw. Instead, Project Anemoi draws inspiration from the hit video game series Halo and the control scheme used in "Forge Mode". The aformentioned control scheme is very stable and also very intuitive. It does not involve roll, pitch, or yaw. Project Anemoi instead places a layer of abstraction over pitching, rolling, and yawing, and instead allows the pilot to focus on the controls: forward, backward, left, right, up, and down. 
 
 
 
 ###Section Two: Control Concepts
 
-This section covers the broad concepts used in controlling the multicopter. For more in-depth math, the next section will cover all of the math needed to implement a Project Icarus controller. 
+This section covers the broad concepts used in controlling the multicopter. For more in-depth math, the next section will cover all of the math needed to implement a Project Anemoi controller. 
 
 This controller was built with customization in mind. We needed a platform on which we could easily add more motors, change dimensions of the craft, and even add more sensors as necessary. Internally, the multicopter's frame is represented by a plane which is, for lack of a better term, centered at the origon. When the velocity of the craft needs to be changed, a new vector is issued to the controller. This vector is used as the normal for a plane that contains a number of motor representations, the controller will attempt to match the current motor representations to the goal motor representations. It attempts to change the motor locations by using one PID controller for each motor. When the motor gets closer to its goal representation its error gets decreased, and when it gets further away it increases its error. Negative errors may occur for motors that are "above" its goal representation. When this occurs, the controller has the choice of either trying to reverse the motors, or simply turning them off. Most implementations will simply shut down the motor. Yawing is not factored into this model as yawing is only necessary for human pilots and the human pilot issues controls to yaw whenever they deem necessary. 
 
