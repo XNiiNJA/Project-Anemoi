@@ -1,0 +1,29 @@
+Project Icarus SPI Transfer Commands
+
+All commands 13 bytes
+
+
+Command 0
+
+	Set orientation vector
+
+	byte 0: 0x0
+
+	byte 1-4: vector x dimension floating point
+
+	byte 5-8: vector y dimension floating point
+
+	byte 9-12: vector z dimension floating point 
+
+Command 1
+
+	set acceleration vector
+
+	byte 0: 0x1
+
+	byte 1-4: vector x dimension floating point
+
+	byte 5-8: vector y dimension floating point
+
+	byte 9-12: vector z dimension floating point 
+

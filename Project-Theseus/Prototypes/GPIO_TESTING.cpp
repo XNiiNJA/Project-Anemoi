@@ -3,7 +3,12 @@
 #include <iostream>
 #include <ctime>
 #include <cmath>
+#include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
 #include "Driver.h"
+#include "Receiver.h"
 
 #define TURN_RIGHT_PIN 	4
 #define TURN_LEFT_PIN 	3
@@ -33,24 +38,65 @@ void turnRight();
 
 void turnLeft();
 
+void exit_handler(int s){
+	
+	Driver::setDriveSpeed(0);
+	Driver::turnStraight();
+	
+	Driver::update();
+	
+	exit(0);
+	
+}
+
 int main (void)
 {
+	struct sigaction sigIntHandler;
+
+	sigIntHandler.sa_handler = exit_handler;
+	sigemptyset(&sigIntHandler.sa_mask);
+	sigIntHandler.sa_flags = 0;	
+
+	sigaction(SIGINT, &sigIntHandler, NULL);
+	
+	cout << "Initilized Handler";
 	
 	Driver::init();
 	
+	Driver::turnStraight();
+	
+	Driver::setDriveSpeed(0);
+	
 	cout << "Driver Initialized";
+	
+	Receiver::init();
+	
+	cout << "Receiver Initialized";
+	
+	cout << "Starting in 5 seconds...";
+	
+	int startTime = millis();
+	
+	while(millis() - startTime < 5000);
+	
 	
 	for(;;)
 	{
 		
-		if(millis() % 10000 < 3333)
-			Driver::turnRight();
-		else if(millis() % 10000 < 6666)
-			Driver::turnLeft();
-		else
-			Driver::turnStraight();
-		
 		Driver::update();
+		
+		Receiver::update();
+		
+		int turn_amount = Receiver::getTurn();
+		
+		int power_amount = Receiver::getPower();
+		
+		Driver::turnAmount(turn_amount);
+		
+		cout << endl << turn_amount << endl;
+		
+		Driver::setDriveSpeed(((float)power_amount/(float)255) * 100);
+		
 		
 	}
 	return 0 ;
@@ -63,8 +109,6 @@ void turnStraight()
 	//left_pin = LOW;
 	right_pin = 0;
 	left_pin = 0;
-	
-	
 }
 
 void turnRight()
@@ -79,10 +123,7 @@ void turnRight()
 void turnLeft() 
 {
 	cout << "Left";
-	//right_pin = LOW;
-	//left_pin = HIGH;
 	right_pin = 0;
-	left_pin = MAX_TURN;
-	
+	left_pin = MAX_TURN;	
 }
 
