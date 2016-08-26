@@ -58,7 +58,7 @@ public class TheseusDrive {
            
         }
         
-        byte[] ipAddr = new byte[]{(byte)192, (byte)168, (byte)1, (byte)18};
+        byte[] ipAddr = new byte[]{(byte)192, (byte)168, (byte)1, (byte)4};
         InetAddress address = InetAddress.getByAddress(ipAddr);
         
         //Controllers have a -1.0 to 1.0 range for their input. 
