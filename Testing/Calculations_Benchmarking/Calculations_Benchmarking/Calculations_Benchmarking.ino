@@ -3,7 +3,7 @@
 #include <Servo.h>
 #include <SPI.h> // Included for SFE_LSM9DS0 library
 #include <Wire.h>
-#include <SFE_LSM9DS0.h>
+#include "SFE_LSM9DS0.h"
 #include "dimensionals.h"
 #include "quatops.h"
 #include "sensorhub.h"
