@@ -29,7 +29,6 @@ public class AnemoiDrive {
     public static void main(String[] args) throws SocketException, UnknownHostException, IOException, InterruptedException {
         // TODO code application logic here
     
-        DatagramSocket socket = new DatagramSocket(6000);
         
     	try {
 		Controllers.create();
@@ -77,6 +76,8 @@ public class AnemoiDrive {
         
         String outString;
         
+        ChannelManager.init("192.168.1.8");
+        
         while(true)
         {
             cont.poll();
@@ -95,6 +96,8 @@ public class AnemoiDrive {
                     outString += cont.getAxisName(k) + ": " + axisByteForm + "\n";//Float.toString(cont.getAxisValue(k)) + "\n"; 
                 }
 
+               
+                
                 for(; j < cont.getButtonCount(); j++)
                 {
                     byte buttonByteForm = cont.isButtonPressed(j) ? (byte)1 : (byte)0;
@@ -105,17 +108,15 @@ public class AnemoiDrive {
                                                                                 
             //}
             
-            socket.setSoTimeout(100);
-            
-            socket.send(new DatagramPacket(output_array,0, output_array.length, address, 6000));
+            ChannelManager.send();
             
             Thread.yield();
+            
+            Thread.sleep(3);
             
             System.out.println(outString);
             
             outString = "";
-            
-            Thread.sleep(10);
             
         }
     
