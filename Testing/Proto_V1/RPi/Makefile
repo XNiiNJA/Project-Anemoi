@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-c -Wall 
 LDFLAGS=
-SOURCES=Receiver.cpp RPI_Connection_Manager.cpp
+SOURCES=Receiver.cpp RPI_Connection_Manager.cpp ControlsProcessing.cpp CommandProcessing.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=REC_TEST
 
@@ -12,3 +12,4 @@ $(EXECUTABLE): $(OBJECTS)
 
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@
+

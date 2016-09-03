@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "Receiver.h"
+#include "ControlsProcessing.h"
+#include "CommandProcessing.h"
 
 using namespace std;
 
@@ -14,15 +16,21 @@ int main (void)
 	
 	Receiver::init();
 	
+	ControlsProcessing::init();
+	
+	CommandProcessing::init();
+	
 	cout << "Receiver Initialized" << endl;
 	
 	for(;;)
 	{
-		cout << "post" << endl;
+		
 		
 		Receiver::update();
 		
-		cout << turn_amount << endl;
+		ControlsProcessing::update();
+		
+		CommandProcessing::update();
 		
 	}
 	return 0 ;

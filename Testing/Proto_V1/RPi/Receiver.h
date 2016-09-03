@@ -11,6 +11,7 @@
 #include <netinet/in.h>
 #include <iostream>
 #include <cassert>
+#include "types.h"
 
 #define NUM_CHANNELS 6
 
@@ -25,16 +26,15 @@ class Receiver
 public:
 
 
-
 	static void init();
 
 	static void update();
-	
 	
 	static int getTurn();
 	
 	static int getPower();
 	
+	static int8_t getChannel(int id);
 	
 	
 private:

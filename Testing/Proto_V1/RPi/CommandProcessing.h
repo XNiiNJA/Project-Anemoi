@@ -1,22 +1,23 @@
-#include <time.h>
-
+#include <ctime>
+#include "types.h"
 
 
 #define COMMAND_ARM       0x1u
 #define COMMAND_DISARM    0x2u
-#define ORIENT_COMMAND    0x3u
-#define ACCEL_COMMAND     0x4u
-#define VELOCITY_COMMAND  0x5u
-#define POSITION_COMMAND  0x6u
+#define COMMAND_THROTTLE  0x3u
+
+#define ORIENT_COMMAND    0x4u
+#define ACCEL_COMMAND     0x5u
+#define VELOCITY_COMMAND  0x6u
+#define POSITION_COMMAND  0x7u
 
 
 #define ORIENT_COMMAND_X  0
 #define ORIENT_COMMAND_Y  1
 #define ORIENT_COMMAND_Z  2 
 
-#define MESSAGE_SEND_TIME_NSEC 10000
 
-#define NUM_COMMANDS      3
+#define NUM_COMMANDS      4
 #define MAX_COMMAND_SIZE  5
 
 #define MAX_COMMAND_INDEX 2
@@ -45,6 +46,10 @@ public:
 	
 	static void arm();
 	
+	static void resetArm();
+	
+	static void resetDisarm();
+	
 	/*TODO: 
 	 * Add setAccelerationVector()
 	 * Add setAccelerationMagnitude()
@@ -58,5 +63,12 @@ private:
 	static long nextUpdateMillis;
 
 	static uint8_t commandsBuffer[NUM_COMMANDS][MAX_COMMAND_SIZE];
+
+	static uint8_t prevBuffer[NUM_COMMANDS][MAX_COMMAND_SIZE];	
+
+	static int currentCommand;
 	
-}
+	//The i2c file
+	static int i2c_file;
+	
+};

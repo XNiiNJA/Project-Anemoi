@@ -7,7 +7,7 @@
 
 using namespace std;
 
-	static uint8_t channels[2];
+	static int8_t channels[17];
 	static int port = 6000; 
 	static int broadcast = 1;
 	static int s;
@@ -37,12 +37,19 @@ void Receiver::update()
     unsigned slen=sizeof(sockaddr);
     recvfrom(s, buf, sizeof(buf)-1, 0, (sockaddr *)&si_other, &slen);
 
-	channels[TURN_CHANNEL] = buf[TURN_CHANNEL];
-	channels[POWER_CHANNEL] = buf[POWER_CHANNEL];
+	for(int i = 0; i < 17; i++)
+		channels[i] = buf[i];
+//	channels[TURN_CHANNEL] = buf[TURN_CHANNEL];
+//	channels[POWER_CHANNEL] = buf[POWER_CHANNEL];
 	
 }
 
+int8_t Receiver::getChannel(int id)
+{
 
+	return channels[id];
+	
+}
 
 int Receiver::getTurn()
 {

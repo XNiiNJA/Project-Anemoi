@@ -6,6 +6,12 @@
 
 #include "MotorManager.h"
 
+#if defined(ARDUINO) && ARDUINO >= 100
+  #include "Arduino.h"
+#else
+  #include "WProgram.h"
+#endif
+
 #define MIN_MICROSECS 600
 
 #define MAX_MICROSECS 2000
@@ -44,22 +50,22 @@ void MotorManager::init()
   point location; 
 
   location.z = 0;
-  location.x = -24;
+  location.x = 24;
   location.y = 20;
 
   servoList[0]->setLocation(location);
 
-  location.x = 24;
+  location.x = -24;
   location.y = 20;
   
   servoList[1]->setLocation(location);
   
-  location.x = 24;
+  location.x = -24;
   location.y = -20;
   
   servoList[2]->setLocation(location);
   
-  location.x = -24;
+  location.x = 24;
   location.y = -20;
   
   servoList[3]->setLocation(location);
@@ -91,11 +97,6 @@ void MotorManager::update()
   Serial.print(" , ");
   Serial.print(or4);
   Serial.println(" , ");
-  
-  float power1 = (float)((sin((float)(millis() / 4000.0f)) + 1) / 2) * 100 + 5;
-  float power2 = (float)((sin((float)((millis() + 1000)/ 4000.0f)) + 1) / 2) * 100 + 5;
-  float power3 = (float)((sin((float)((millis() + 2000) / 4000.0f)) + 1) / 2) * 100 + 5; 
-  float power4 = (float)((sin((float)((millis() + 3000) / 4000.0f)) + 1) / 2) * 100 + 5;       
 
 //  setMotorTrim(0, power1);
 //  setMotorTrim(1, power2);
@@ -159,10 +160,10 @@ void MotorManager::setBasePower(float p)
 
 	basePower = p;
 
-	for(int i = 0; i < MOTOR_COUNT; i++)
+	/*for(int i = 0; i < MOTOR_COUNT; i++)
 	{
 		servoList[i]->setPower(p);
-	}
+	}*/
 
 }
 

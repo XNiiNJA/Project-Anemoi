@@ -43,10 +43,10 @@ AbstractServo::AbstractServo(int low, int high, int pin, float rangeMin, float r
 
 void AbstractServo::update()
 {
-
+  noInterrupts();
   if(enabled)
   {
-    arming = false
+    arming = false;
     
     int range = highMicroseconds - lowMicroseconds;
     int totPower = (int)(lowMicroseconds + range * ((float)currentPower/(float)highRange));
@@ -65,15 +65,17 @@ void AbstractServo::update()
    //Do nothing. 
   }
   
+  interrupts();
+  
   
 }
 
 /*Allow the servo to take commands*/
 void AbstractServo::enable()
 {
-
+ 
   servoObj.attach(motorPin);
-  servoObj.writeMicroseconds(0);
+  servoObj.writeMicroseconds(lowMicroseconds);
 
   arming = true;
 

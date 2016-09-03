@@ -4,11 +4,17 @@
 *	Author: Grant Oberhauser
 */
 
+#if defined(ARDUINO) && ARDUINO >= 100
+  #include "Arduino.h"
+#else
+  #include "WProgram.h"
+#endif
+
 #include "OrientationController.h"
 
 #define MOTOR_P 1
 #define MOTOR_I 0
-#define MOTOR_D 1
+#define MOTOR_D 0
 
 
 static point globalOrientationVector;
@@ -84,10 +90,6 @@ void OrientationController::update()
 
 	  motorControllers[i].setCurrentValue(error);
 
-          Serial.print(-error);
-          
-          Serial.print(" , ");
-
           motorControllers[i].setP(MOTOR_P);
 
           motorControllers[i].setI(MOTOR_I);
@@ -97,10 +99,6 @@ void OrientationController::update()
           motorControllers[i].update();
    
 	}
-
-
-          
-          Serial.println();
 
 }
 
