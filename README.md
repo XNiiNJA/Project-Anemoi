@@ -64,7 +64,7 @@ Ix = (Ty * (Ty * Mx - Tx * My))/((Tx * Tx) + (Ty * Ty))
 
 Iy = (Tx * (Tx * My - Mx * Ty))/ ((Tx * Tx) + (Ty * Ty))
 
-Where I = (Ix, Iy) is the point at which the rotation axis intersects the line that perpendicularly passes the rotation axis and passes through the motor at (Mx, My).
+Where I = (Ix, Iy) is the point at which the rotation axis intersects a line that is perpendicular to the rotation axis and passes through the motor location at (Mx, My).
 
 **STOP**. Make sure to chew on that sentence for a bit. You want to understand what we're doing here. Let me explain a bit more. 
 
@@ -72,7 +72,7 @@ We have a couple of pieces here. The rotation axis is a line that is perpendicul
 
 Now, read that first sentence again. Hopefully it makes sense. 
 
-Also, keep in mind, this is all happening in a very small timeslice. The motor will probably only use a little bit of the circle we calculate here. Then, on the next go around it will all be calculated again.
+Also, keep in mind, this is all happening in a very small timeslice. The motor will probably only use a little bit of the circle we calculate here. On the next go around of the code, it will all be calculated again.
 
 #####Part Three: Finding rotation arc angle for each motor.
 
