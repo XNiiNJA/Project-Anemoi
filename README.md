@@ -102,4 +102,6 @@ For example, if the goal is to control the velocity of the multirotor, then we m
 
 This is the downside of this control scheme, multiple PID controllers working in tandem. If tuned incorrectly, the problem could be very difficult to find. This being said, upper level control settings (i.e. position, velocity) should be capable of switching between different multirotor setups. Sharing control settings could even be facilitated by communities of multirotor enthusiasts in order to find better setups that they enjoy using, and they could even go as far as sharing control settings between different multirotor setups. So, pure startup time is astronomically higher than common control schemes. However, with the use of the internet, the control schemes of others could be easily used and traded between other users. So, multiple controllers could either be thought of as a pro, or a con.
 
-\*(*Halo 3, Halo Reach, and Halo 4. not the abomination of a control scheme introduced in Halo 5. We have strong feelings about these things.*)
+___
+
+\**Halo 3, Halo Reach, and Halo 4. not the abomination of a control scheme introduced in Halo 5. We have strong feelings about these things.*
