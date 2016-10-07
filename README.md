@@ -104,4 +104,4 @@ This is the downside of this control scheme, multiple PID controllers working in
 
 ___
 
-\**Halo 3, Halo Reach, and Halo 4. not the abomination of a control scheme introduced in Halo 5. We have strong feelings about these things.*
+\**Halo 3, Halo Reach, and Halo 4, not the abomination of a control scheme introduced in Halo 5. We have strong feelings about these things.*
