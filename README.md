@@ -72,6 +72,10 @@ We have a couple of pieces here. The rotation axis is a line that is perpendicul
 
 Now, read that first sentence again. Hopefully it makes sense. 
 
+If you use these points to get the radius, then simplify this equation, the resulting equation is: sqrt( (Tx * Mx + Ty * My)^2 / (Tx^2 + Ty^2)) = r
+
+This simplified equation will be much nicer to your processor than the above two equations. 
+
 Also, keep in mind, this is all happening in a very small timeslice. The motor will probably only use a little bit of the circle we calculate here. On the next go around of the code, it will all be calculated again.
 
 #####Part Three: Finding rotation arc angle for each motor.
