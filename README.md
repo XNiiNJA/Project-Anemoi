@@ -4,13 +4,13 @@ Operates on port ~~58511~~ 20303
 
 This guide outlines the underlying mathematics of the control scheme used in the Anemoi project. The mathematics used in this project heavily use 3d vectors, lines, planes, cross-products, dot products, and trigonometry. Previous knowledge of such concepts is advised; however this guide will offer quick refreshers when needed for every new concept. 
 
-###Section One: Philosophy
+### Section One: Philosophy
 
 Project Anemoi is tasked with creating a new control scheme for latency heavy operation of unmanned multirotors. This control scheme is needed when trying to remotely control multicopters over a cellular connection or other packet switched networks. This is a departure from the already prevalent radio controlled multicopters which can rely on very low latency. Project Anemoi, however, needs a semi-autonomous control scheme which is capable of intuitive control. Basically, Project Anemoi needs to depart from the popular idea of allowing the pilot to use pitch, roll, and yaw. Instead, Project Anemoi draws inspiration from the hit video game series Halo and the control scheme used in "Forge Mode"<sup>1</sup>. The aforementioned control scheme is very stable and also very intuitive. It does not involve roll, pitch, or yaw. Project Anemoi instead places a layer of abstraction over pitching, rolling, and yawing, and instead allows the pilot to focus on the controls: forward, backward, left, right, up, down and heading. Heading doesn't directly imply yawing, but more of which direction the multicopter is facing the camera. Pointing the camera *can* be done through yawing, however it could also be done though pitching and rolling, or even simply facing a gimbaled camera in a direction.
 
 
 
-###Section Two: Control Concepts
+### Section Two: Control Concepts
 
 This section covers the broad concepts used in controlling the multicopter. For more in-depth math, the next section will cover quite a bit of the math needed to implement a Project Anemoi controller. 
 
@@ -19,7 +19,7 @@ This controller was built with customization in mind. We needed a platform on wh
 Note: PID controllers will also be used to yaw by using a tradeoff system to make sure overall thrust is kept while also providing yawing action. 
 
 
-###Section Three: Math
+### Section Three: Math
 
 First things first, buckle up. This might take a while to get through. 
 
@@ -33,7 +33,7 @@ In order to more easily explain the control scheme, it will be split into four p
 * Finding rotation arc angle for each motor.
 * Determine whether the motor shall rise or fall.
 
-#####Part One: Finding target angle error
+##### Part One: Finding target angle error
 
 The first part of the control scheme is relatively simple, we must find the whole craft's error in terms of an angle. 
 
@@ -58,7 +58,7 @@ Now, we have Tz = |T|cos(θ).
 It's now obvious that Cos^-1(Tz/|T|) = θ
 
 
-#####Part Two: Finding rotation arc radius for each motor.
+##### Part Two: Finding rotation arc radius for each motor.
 
 Ix = (Ty * (Ty * Mx - Tx * My))/((Tx * Tx) + (Ty * Ty))
 
@@ -78,7 +78,7 @@ This simplified equation will be much nicer to your processor than the above two
 
 Also, keep in mind, this is all happening in a very small timeslice. The motor will probably only use a little bit of the circle we calculate here. On the next go around of the code, it will all be calculated again.
 
-#####Part Three: Finding rotation arc angle for each motor.
+##### Part Three: Finding rotation arc angle for each motor.
 
 Motor angle is found using the same trick used from above when finding the angle between the normal vector and the target vector. 
 
@@ -88,17 +88,17 @@ Cos^-1((Tx * Mx + Ty * My + Tz * Mz)/(sqrt(Tx * Tx + Ty * Ty + Tz * Tz) * sqrt(M
 
 This will give an angle between 0 and PI. 
 
-#####Part Four: Determine whether the motor shall rise or fall.
+##### Part Four: Determine whether the motor shall rise or fall.
 
 In order to determine if the motor should rise or fall, simply subtract PI/2 from the motor angle. 
 
 This will give a signed angle value. 
 
-#####Bring it all together
+##### Bring it all together
 
 error = targetAngle * radius * motorAngle
 
-###Section Four: High-Level Control Concepts Application
+### Section Four: High-Level Control Concepts Application
 
 The math covered in the previous section is only the tip of the iceberg. It is, however, the core idea of the entire control concept. With the currently covered math, one would be capable of issuing a vector relative to the multirotor's current orientation. This, by itself, is relatively useless. We, instead, need a way to issue a point relative to the world. This point would then act as a target for the multirotor. Various control schemes could then be based off this concept. That global point could be an acceleration which is relative to the world. That global point could also be a velocity, or even a position. In fact, sometimes all three will need to be used together. 
 
