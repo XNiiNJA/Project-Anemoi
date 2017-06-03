@@ -12,7 +12,7 @@
 
 #define PI 3.141592653589793238
 
-#define GyroMeasError PI * (40.0f / 180.0f)       // gyroscope measurement error in rads/s (shown as 3 deg/s)
+#define GyroMeasError PI * (90.0f / 180.0f)       // gyroscope measurement error in rads/s (shown as 3 deg/s)
 #define GyroMeasDrift PI * (0.0f / 180.0f)      // gyroscope measurement drift in rad/s/s (shown as 0.0 deg/s/s)
 // There is a tradeoff in the beta parameter between accuracy and response speed.
 // In the original Madgwick study, beta of 0.041 (corresponding to GyroMeasError of 2.7 degrees/s) was found to give optimal accuracy.
@@ -25,6 +25,7 @@
 #define beta sqrt(3.0f / 4.0f) * GyroMeasError   // compute beta
 #define zeta sqrt(3.0f / 4.0f) * GyroMeasDrift   // compute zeta, the other free parameter in the Madgwick scheme usually set to a small or zero value
 
+#define sampleFreqDef 20.0f // sample frequency in Hz
 
 class KalmanFilter
 {
@@ -36,11 +37,13 @@ public:
 	*/
 	static quaternion MadgwickQuaternionUpdate(point a, point g, point m,
    quaternion orientation, float deltat);
+   
+   static quaternion updateIMU(float gx, float gy, float gz, float ax, float ay, float az,  quaternion orientation, float deltat);
 
-
+        static float invSqrt(float x);
+      
 private:
-
-
+    static float invSampleFreq;
 };
 
 #endif

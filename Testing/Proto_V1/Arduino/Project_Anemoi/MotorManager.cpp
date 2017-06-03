@@ -89,20 +89,18 @@ void MotorManager::update()
   float or3 = OrientationController::getMotorOutput(2);
   float or4 = OrientationController::getMotorOutput(3);
 
-  Serial.print(or1);
-  Serial.print(" , ");
-  Serial.print(or2);
-  Serial.print(" , ");
-  Serial.print(or3);
-  Serial.print(" , ");
-  Serial.print(or4);
-  Serial.println(" , ");
-
 //  setMotorTrim(0, power1);
 //  setMotorTrim(1, power2);
 //  setMotorTrim(2, power3);
 //  setMotorTrim(3, power4);
 
+/*  Serial.print(or1);
+  Serial.print(" , ");
+  Serial.print(or2);
+  Serial.print(" , ");
+  Serial.print(or3); 
+  Serial.print(" , ");
+  Serial.println(or4);*/
 
 
     setMotorTrim(0, or1);

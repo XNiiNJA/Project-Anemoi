@@ -12,7 +12,7 @@
 
 #include "OrientationController.h"
 
-#define MOTOR_P 1
+#define MOTOR_P 10
 #define MOTOR_I 0
 #define MOTOR_D 0
 
@@ -32,7 +32,7 @@ void OrientationController::init()
 	for(int i = 0; i < MotorManager::getMotorCount(); i++)
 	{
 
-		motorControllers[i].init(MOTOR_P, MOTOR_I, MOTOR_D, 100.0f, 0.0f);
+		motorControllers[i].init(MOTOR_P, MOTOR_I, MOTOR_D, 100.0f, -100.0f);
     
 	}
 
@@ -44,20 +44,7 @@ void OrientationController::update()
 {
 
 	point relativeVector = SensorHub::globalToLocal(globalOrientationVector);
-
-        Serial.print("Target: ");
-        
-        Serial.print(globalOrientationVector.x);
-         
-        Serial.print(" , ");
-        
-        Serial.print(globalOrientationVector.y);
-                
-        Serial.print(" , ");                
-                
-        Serial.println(globalOrientationVector.z);
-        
-	
+        	
         float targetAngle = acos(relativeVector.z / sqrt(relativeVector.x * relativeVector.x + relativeVector.y * relativeVector.y + relativeVector.z * relativeVector.z));
 
 	for(int i = 0; i < MotorManager::getMotorCount(); i++)

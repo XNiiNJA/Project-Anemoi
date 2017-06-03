@@ -107,6 +107,11 @@ void AbstractServo::setPower(float p)
 
     //lastTime = millis();
 	  //servoObj->writeMicroseconds((int)(lowMicroseconds + range * ((float)p/(float)highRange)));
+    if(p < lowRange)
+      p = lowRange;
+    else if(p > highRange)
+      p = highRange;
+    
     currentPower = p;
     started = true;
     newVal = true;

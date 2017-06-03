@@ -9,7 +9,7 @@
 #include <SPI.h> // Included for SFE_LSM9DS0 library
 #include <WSWire.h>
 #include "dimensionals.h"
-#include "quatops.h"
+#include "quatops.h"c
 #include "sensorhub.h"
 #include "MotorManager.h"
 #include "AbstractServo.h"
@@ -210,8 +210,6 @@ uint32_t throttBytes;
 float throttFloatTest;
   
 void loop() {
-
-  Serial.println(millis() - loopStart);
   
 /*  if(millis() - loopStart > 300)
     I2C_ClearBus();*/
@@ -223,46 +221,6 @@ void loop() {
 //MotorManager::setBasePower((float)((sin((float)(millis() / 1000.0f)) + 1) / 2) * 10 + 5);
   
   MotorManager::update();
-
-  if(command != -1)
-  {
-    Serial.print("Got ");
-    //Serial.println(reinterpret_cast<int8_t&>(commands[ORIENT_COMMAND][ORIENT_COMMAND_X]));
-    Serial.println(command);
-/*    if(command == THROTTLE_COMMAND)
-    {
-      Serial.println("THROTTLE COMMANND!@@@!@#@##@@##$@#$$@#@#$@$#");
-      Serial.print(commands[THROTTLE_COMMAND][0]);
-      Serial.print(" , ");
-      Serial.print(commands[THROTTLE_COMMAND][1]);
-      Serial.print(" , ");
-      Serial.print(commands[THROTTLE_COMMAND][2]);
-      Serial.print(" , ");
-      Serial.print(commands[THROTTLE_COMMAND][3]);
-      Serial.println(" , ");
-      
-      throttBytes = commands[THROTTLE_COMMAND][0];
-      throttBytes |= ((uint32_t)commands[THROTTLE_COMMAND][1] << 8);
-      throttBytes |= ((uint32_t)commands[THROTTLE_COMMAND][2] << 16);
-      throttBytes |= ((uint32_t)commands[THROTTLE_COMMAND][3] << 24);
-      
-      //throttFloatTest = reinterpret_cast<float&>(throttBytes);
-      
-      //memcpy(&throttFloatTest, &throttBytes, sizeof throttFloatTest);
-      
-      throttFloatTest = *(float *)&throttBytes;
-      
-      Serial.print(throttFloatTest, 6);
-      Serial.println(" Power Level ");
-      
-    }*/
-    command = -1;
-  }
-  
-  
- 
-  
-  
   /*
   point targetPoint;
   targetPoint.x = 0;

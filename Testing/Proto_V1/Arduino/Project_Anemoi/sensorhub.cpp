@@ -7,13 +7,16 @@
 #include "sensorhub.h"
 #include <SparkFunLSM9DS1.h>
 
-//#define FLIP_X_Y
+
 //#define INVERSE_ACCEL_Y
 //#define INVERSE_ACCEL_Z
+//#define INVERSE_Z
+#define INVERSE_X
+#define INVERSE_Y
+//#define FLIP_X_Y
 
 //Always have the orientation of the device level
 //#define ALL_LEVEL 
-
 // begin() returns a 16-bit value which includes both the gyro 
 // and accelerometers WHO_AM_I response. You can check this to
 // make sure communication was successful.
@@ -102,18 +105,21 @@ void SensorHub::init()
   // Strategy here is to effectively oversample accelerometer at 100 Hz and use a 50 Hz anti-aliasing (low-pass) filter frequency
   // to get a smooth ~150 Hz filter update rate
   //  dof.setAccelABW(dof.A_ABW_50); // Choose lowest filter setting for low noise
-  
+  imu.settings.accel.highResEnable = true;
+  imu.settings.accel.highResBandwidth = 0;
 
   // Gyro output data rates can be: 95 Hz (bandwidth 12.5 or 25 Hz), 190 Hz (bandwidth 12.5, 25, 50, or 70 Hz)
   //                                 380 Hz (bandwidth 20, 25, 50, 100 Hz), or 760 Hz (bandwidth 30, 35, 50, 100 Hz)
 //  dof.setGyroODR(dof.G_ODR_190_BW_125);  // Set gyro update rate to 190 Hz with the smallest bandwidth for low noise
-  imu.setAccelODR(190);
-
+  imu.setGyroODR(190);
+  imu.settings.gyro.HPFEnable = true;
+  
+  
   // Magnetometer output data rate can be: 3.125 (ODR_3125), 6.25 (ODR_625), 12.5 (ODR_125), 25, 50, or 100 Hz
 //  dof.setMagODR(dof.M_ODR_125); // Set magnetometer to update every 80 ms
   imu.setMagODR(125);
   
-
+  imu.calibrateMag(true);
 
 }
 
@@ -121,31 +127,51 @@ void SensorHub::init()
 void SensorHub::update()
 {
   
-    now = millis();
+
+    if(imu.accelAvailable() && imu.gyroAvailable() && imu.magAvailable())
+    {
+      now = millis();
     
-    deltat = now - lastUpdate;
+      deltat = (now - lastUpdate) / 1000.0f;
     
-    lastUpdate = now;
+      lastUpdate = now;
 
-    imu.readGyro();           // Read raw gyro data
-    gyro.x = imu.calcGyro(imu.gx);   // Convert to degrees per seconds
-    gyro.y = imu.calcGyro(imu.gy);
-    gyro.z = imu.calcGyro(imu.gz);
-    
+  
+      imu.readGyro();           // Read raw gyro data
+      gyro.x = imu.calcGyro(imu.gx);   // Convert to degrees per seconds
+      gyro.y = imu.calcGyro(imu.gy);
+      gyro.z = imu.calcGyro(imu.gz);
 
-
- 
-    imu.readAccel();         // Read raw accelerometer data
-    accel.x = imu.calcAccel(imu.ax);   // Convert to g's
-    accel.y = imu.calcAccel(imu.ay);
-    accel.z = imu.calcAccel(imu.az);
-
-
-    
-    imu.readMag();           // Read raw magnetometer data
-    mag.x = -imu.calcMag(imu.mx);     // Convert to Gauss
-    mag.y = imu.calcMag(imu.my);
-    mag.z = imu.calcMag(imu.mz);
+  /*    Serial.print(gyro.x);
+      Serial.print(" , ");
+      Serial.print(gyro.y);
+      Serial.print(" , ");
+      Serial.println(gyro.z);*/    
+  
+  
+   
+      imu.readAccel();         // Read raw accelerometer data
+      accel.x = imu.calcAccel(imu.ax);   // Convert to g's
+      accel.y = imu.calcAccel(imu.ay);
+      accel.z = imu.calcAccel(imu.az);
+  
+  /*    Serial.print(accel.x);
+      Serial.int(" , ");
+      Serial.print(accel.y);
+      Serial.print(" , ");
+      Serial.println(accel.z);*/
+  
+      
+      imu.readMag();           // Read raw magnetometer data
+      mag.x = -imu.calcMag(imu.mx);     // Convert to Gauss
+      mag.y = imu.calcMag(imu.my);
+      mag.z = imu.calcMag(imu.mz);
+      
+  /*    Serial.print(mag.x);
+      Serial.print(" , ");
+      Serial.print(mag.y);
+      Serial.print(" , ");
+      Serial.println(mag.z);   */
     
 
     
@@ -225,20 +251,6 @@ void SensorHub::update()
 
 #else
 
-    Serial.println("Gyro:");
-    Serial.println(gyro.x);
-    Serial.println(gyro.y);
-    Serial.println(gyro.z);
-    
-    Serial.println("Accel:");
-    Serial.println(accel.x);
-    Serial.println(accel.y);
-    Serial.println(accel.z);
-    
-    Serial.println("Mag:");
-    Serial.println(mag.x);
-    Serial.println(mag.y);
-    Serial.println(mag.z);
 
     //The madgwick function works in radians. So the gyro readings need to be converted quick. 
     point radGyro;
@@ -246,14 +258,71 @@ void SensorHub::update()
     radGyro.y = gyro.y*PI/180.0f;
     radGyro.z = gyro.z*PI/180.0f;
 
+    
+    /*Serial.print(orient.a);
+    Serial.print(" , ");
+    Serial.print(orient.b);
+    Serial.print(" , ");
+    Serial.print(orient.c); 
+    Serial.print(" , ");
+    Serial.println(orient.d);*/
+  
+
     orient = KalmanFilter::MadgwickQuaternionUpdate(accel, radGyro, mag, orient, deltat);
 
-    Serial.println(orient.a);
-    Serial.println(orient.b);
-    Serial.println(orient.c);
-    Serial.println(orient.d);
+    //orient = KalmanFilter::updateIMU(radGyro.x, radGyro.y, radGyro.z, accel.x, accel.y, accel.z, orient, deltat); 
+
+/*  Serial.print(accel.x);
+  Serial.print(" , ");
+  Serial.print(accel.y);
+  Serial.print(" , ");
+  Serial.print(accel.z);
+  Serial.print("______________");
+  Serial.print(radGyro.x);
+  Serial.print(" , ");
+  Serial.print(radGyro.y);
+  Serial.print(" , ");
+  Serial.print(radGyro.z);
+  Serial.print("______________");
+  Serial.print(mag.x);
+  Serial.print(" , ");
+  Serial.print(mag.y);
+  Serial.print(" , ");
+  Serial.print(mag.z);
+  Serial.print("______________");
+  Serial.print(" , ");
+  Serial.print(deltat);
+
+  Serial.print("______________");*/ 
 
 #endif
+
+    }
+
+/*  point dbgPoint; 
+  
+  dbgPoint.x = 0;
+  dbgPoint.y = 0;
+  dbgPoint.z = 1;
+  
+  dbgPoint = globalToLocal(dbgPoint);
+
+  Serial.print(dbgPoint.x);
+  Serial.print(" , ");
+  Serial.print(dbgPoint.y);
+  Serial.print(" , ");
+  Serial.print(dbgPoint.z); 
+  Serial.print(" - ");
+  Serial.println(deltat); */
+
+
+/*  Serial.print(orient.a);
+  Serial.print(" , ");
+  Serial.print(orient.b);
+  Serial.print(" , ");
+  Serial.print(orient.c); 
+  Serial.print(" , ");
+  Serial.println(orient.d);*/
 
 
 }
@@ -300,7 +369,7 @@ point SensorHub::globalToLocal(point p)
 
 	finalPoint.x = tempPoint.b;
 	finalPoint.y = tempPoint.c;
-	finalPoint.z = tempPoint.d;
+	finalPoint.z = tempPoint.d; 
 
 	return finalPoint;
 
