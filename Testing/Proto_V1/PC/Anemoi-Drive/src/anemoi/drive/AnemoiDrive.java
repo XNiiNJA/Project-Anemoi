@@ -5,6 +5,7 @@
  */
 package anemoi.drive;
 
+import java.awt.MouseInfo;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -16,6 +17,14 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
 import static java.net.InetAddress.getByAddress;
+import java.util.HashSet;
+import java.util.Set;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
+
+import java.awt.PointerInfo;
+import java.awt.Robot;
+
 
 /**
  *
@@ -26,10 +35,9 @@ public class AnemoiDrive {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws SocketException, UnknownHostException, IOException, InterruptedException {
+    public static void main(String[] args) throws SocketException, UnknownHostException, IOException, InterruptedException, LWJGLException {
         // TODO code application logic here
     
-        
     	try {
 		Controllers.create();
 	} catch (LWJGLException e) {
@@ -47,14 +55,15 @@ public class AnemoiDrive {
            
            String name = curControl.getName();
            
-           if(name.contains("Xbox One"))
+           
+           System.out.println(name);
+           
+           if(name.contains("Device"))
            {
-               
-               cont = curControl;
-               break;
+                  cont = curControl;
+                  break;
                
            }
-           
            
         }
         
@@ -69,14 +78,13 @@ public class AnemoiDrive {
         //Packet will be structured as...
         //speed|turn_direction
         
-        
         String[] input_array = {"Z Rotation", "X Rotation"};
         
         byte[] output_array = new byte[2];
         
         String outString;
         
-        ChannelManager.init("192.168.1.8");
+        ChannelManager.init("192.168.1.19");
         
         while(true)
         {
@@ -108,6 +116,32 @@ public class AnemoiDrive {
                                                                                 
             //}
             
+            try
+            {
+
+               if(MouseInfo.getPointerInfo() != null)
+               {
+                  outString += "Mouse X: " + MouseInfo.getPointerInfo().getLocation().x + "\n";
+
+                  outString += "Mouse Y: " + MouseInfo.getPointerInfo().getLocation().y + "\n";
+               }
+               
+               Robot rob = new Robot();
+               
+               System.out.println(MouseInfo.getPointerInfo().getDevice());
+               
+               System.out.println(MouseInfo.getPointerInfo().getDevice().getDisplayMode().getHeight());
+               
+               System.out.println(MouseInfo.getPointerInfo().getDevice().getDisplayMode().getWidth());
+               
+            }
+            catch(Exception e)
+            {
+               e.printStackTrace();
+               
+            }
+            
+            
             ChannelManager.send();
             
             Thread.yield();
@@ -117,6 +151,7 @@ public class AnemoiDrive {
             System.out.println(outString);
             
             outString = "";
+            
             
         }
     

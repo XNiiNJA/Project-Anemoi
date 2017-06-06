@@ -1,0 +1,12 @@
+C:\Users\Grant\Projects\Project-Icarus\Testing\Proto_V1\PC\Anemoi-Drive-XNA-Windows\oberhauserg_Prog1\bin\Debug\oberhauserg_Prog1.exe.config
+C:\Users\Grant\Projects\Project-Icarus\Testing\Proto_V1\PC\Anemoi-Drive-XNA-Windows\oberhauserg_Prog1\obj\Debug\oberhauserg_Prog1.vbprojResolveAssemblyReference.cache
+C:\Users\Grant\Projects\Project-Icarus\Testing\Proto_V1\PC\Anemoi-Drive-XNA-Windows\oberhauserg_Prog1\obj\Debug\oberhauserg_Prog1.FormClassCreate.resources
+C:\Users\Grant\Projects\Project-Icarus\Testing\Proto_V1\PC\Anemoi-Drive-XNA-Windows\oberhauserg_Prog1\obj\Debug\oberhauserg_Prog1.FormClassShow.resources
+C:\Users\Grant\Projects\Project-Icarus\Testing\Proto_V1\PC\Anemoi-Drive-XNA-Windows\oberhauserg_Prog1\obj\Debug\oberhauserg_Prog1.Resources.resources
+C:\Users\Grant\Projects\Project-Icarus\Testing\Proto_V1\PC\Anemoi-Drive-XNA-Windows\oberhauserg_Prog1\obj\Debug\oberhauserg_Prog1.vbproj.GenerateResource.Cache
+C:\Users\Grant\Projects\Project-Icarus\Testing\Proto_V1\PC\Anemoi-Drive-XNA-Windows\oberhauserg_Prog1\bin\Debug\oberhauserg_Prog1.exe
+C:\Users\Grant\Projects\Project-Icarus\Testing\Proto_V1\PC\Anemoi-Drive-XNA-Windows\oberhauserg_Prog1\bin\Debug\oberhauserg_Prog1.pdb
+C:\Users\Grant\Projects\Project-Icarus\Testing\Proto_V1\PC\Anemoi-Drive-XNA-Windows\oberhauserg_Prog1\bin\Debug\oberhauserg_Prog1.xml
+C:\Users\Grant\Projects\Project-Icarus\Testing\Proto_V1\PC\Anemoi-Drive-XNA-Windows\oberhauserg_Prog1\obj\Debug\oberhauserg_Prog1.exe
+C:\Users\Grant\Projects\Project-Icarus\Testing\Proto_V1\PC\Anemoi-Drive-XNA-Windows\oberhauserg_Prog1\obj\Debug\oberhauserg_Prog1.xml
+C:\Users\Grant\Projects\Project-Icarus\Testing\Proto_V1\PC\Anemoi-Drive-XNA-Windows\oberhauserg_Prog1\obj\Debug\oberhauserg_Prog1.pdb
