@@ -25,7 +25,7 @@
   //#define ATMEGA8
 
   #ifndef TWI_FREQ
-  #define TWI_FREQ 400000L
+  #define TWI_FREQ 100000L
   #endif
 
   #ifndef TWI_BUFFER_LENGTH
@@ -49,6 +49,8 @@
   void twi_stop(void);
   void twi_releaseBus(void);
   uint8_t twi_tout(uint8_t);
+
+  uint8_t twi_start();
 
 #endif
 

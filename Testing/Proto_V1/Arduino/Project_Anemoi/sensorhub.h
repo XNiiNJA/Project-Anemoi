@@ -45,7 +45,7 @@ public:
 
 	static quaternion filteredOrientation();
 
-  static float getDeltaT(){return deltat;}
+        static float getDeltaT(){return deltat;}
 
 protected:
 
@@ -60,7 +60,7 @@ protected:
 	static uint16_t lastUpdate;    
 	static uint16_t now;           
 
-	static float deltat;
+	static double deltat;
 
 
 };

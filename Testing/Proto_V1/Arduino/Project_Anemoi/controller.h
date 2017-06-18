@@ -53,6 +53,12 @@ public:
 	/*Preload a value into the actual derivative value*/
 	void preloadD(float dir){curDir = dir;}
 
+        /*Tells the controller that all "deltaT" values will be forced. Don't calcuate it.*/
+        void forceDeltaT(){deltaTForced = true;}
+
+        /*Sets the "deltaT" time. Only works if forceDeltaT() has already been called.*/
+        void setDeltaT(float d){deltaT = d;}
+
 	/*Get the output of the control loop*/
 	float getOutput();
 
@@ -60,7 +66,7 @@ private:
 
 	float Pval, Ival, Dval;
 
-  float anotherVal;
+        float anotherVal;
 
 	float curProp, curInti, curDir;
 
@@ -74,7 +80,11 @@ private:
 
 	float curReading;
 
+        float deltaT = 0.0f;
+
 	bool setpointLimitsSet = false;
+
+        bool deltaTForced = false;
 
 };
 

@@ -5,6 +5,7 @@
 */
 
 #include "controller.h"
+#include "logging.h"
 
 
 #if defined(ARDUINO) && ARDUINO >= 100
@@ -13,11 +14,15 @@
   #include "WProgram.h"
 #endif
 
+long last_time = 0;
+
+float curProp = 0.0f, curInti = 0.0f, curDir = 0.0f;
+
 Controller::Controller()
 {
-	Pval = 0; 
-	Ival = 0; 
-	Dval = 0;
+  Pval = 0; 
+  Ival = 0; 
+  Dval = 0;
   curProp = 0;
   lastError = 0;
 }
@@ -26,11 +31,11 @@ Controller::Controller()
 void Controller::init(float PParam, float IParam, float DParam)
 {
 
-	Pval = anotherVal = PParam;
-	Dval = DParam;
-	Ival = IParam;
+  Pval = anotherVal = PParam;
+  Dval = DParam;
+  Ival = IParam;
 
- 
+  last_time = micros();
 
 }
 
@@ -38,36 +43,57 @@ void Controller::init(float PParam, float IParam, float DParam)
 void Controller::init(float PParam, float IParam, float DParam, float maxSetpoint, float minSetpoint)
 {
 
-	Pval = PParam;
-	Dval = DParam;
-	Ival = IParam;
+  Pval = PParam;
+  Dval = DParam;
+  Ival = IParam;
 
-	maxSet = maxSetpoint;
-	minSet = minSetpoint;
+  maxSet = maxSetpoint;
+  minSet = minSetpoint;
 
   setpointLimitsSet = true;
+  
 }
 
 /*Run a pass through the control loop*/
 void Controller::update()
 {
 
-	lastError = curProp;
+  float delta;
 
-	curProp = curSetpoint - curReading;
+  last_time = micros();
+  
+  if(deltaTForced)
+  {
+    delta = deltaT; 
+  }
+  else
+  {
+    delta = ((float)micros() - last_time)/1000000.0f;
+  }
+  
+  lastError = curProp;
 
-	curDir = curProp - lastError;
+  curProp = curSetpoint - curReading;
 
-	curInti += curProp;
+  curDir = (curProp - lastError)/delta;
 
-	if(setpointLimitsSet && curInti > maxSet)
-	{
-		curInti = maxSet;
-	}
-	else if(setpointLimitsSet && curInti < minSet)
-	{
-		curInti = minSet;
-	}
+  //Dis a trapezoidal rule. Come at me brah.
+  curInti += (delta/2) * (lastError + curProp);//curProp;
+
+  Logging::log(".............................................DELTA: ");
+  Logging::log(curProp);
+  Logging::log(" - ");
+  Logging::logln(lastError);
+
+
+  if(setpointLimitsSet && curInti > maxSet)
+  {
+    curInti = maxSet;
+  }
+  else if(setpointLimitsSet && curInti < minSet)
+  {
+    curInti = minSet;
+  }
 
 }
 
@@ -75,12 +101,12 @@ void Controller::update()
 void Controller::setSetpoint(float p)
 {
 
-	if(setpointLimitsSet && p < minSet)
-		p = minSet;
-	else if(setpointLimitsSet && p > maxSet)
-		p = maxSet;
+  if(setpointLimitsSet && p < minSet)
+    p = minSet;
+  else if(setpointLimitsSet && p > maxSet)
+    p = maxSet;
 
-	curSetpoint = p;
+  curSetpoint = p;
 
 }
 
@@ -88,13 +114,9 @@ void Controller::setSetpoint(float p)
 void Controller::applySetpointLimits(float max, float min)
 {
 
-
-	maxSet = max;
-
-	minSet = min;
-
-	setpointLimitsSet = true;
-
+  maxSet = max;
+  minSet = min;
+  setpointLimitsSet = true;
 
 }
 
@@ -102,13 +124,16 @@ void Controller::applySetpointLimits(float max, float min)
 float Controller::getOutput()
 {
 
-  float rawOut = curProp * Controller::Pval + curInti * Controller::Ival + curDir * Controller::Dval;
+  float rawOut = curProp * Pval + curInti * Ival + curDir * Dval;
 
-  if(rawOut > maxSet)
+  Logging::log(".............................................Final Delta: ");
+  Logging::logln(curDir * Dval);
+
+/*  if(rawOut > maxSet)
     rawOut = maxSet;
-	else if(rawOut < minSet)
-    rawOut = minSet;
+  else if(rawOut < minSet)
+    rawOut = minSet;*/
     
-	return rawOut;
+  return rawOut;
 
 }

@@ -13,6 +13,8 @@
   #include "WProgram.h"
 #endif
 
+#define LOW_RESPONSE 637
+
 /*Initialize the servo, giving maximum and minimum operational values, and more simple external values. Along with the pin the servo is on*/
 AbstractServo::AbstractServo(int low, int high, int pin, float rangeMin, float rangeMax)
 {
@@ -43,7 +45,7 @@ AbstractServo::AbstractServo(int low, int high, int pin, float rangeMin, float r
 
 void AbstractServo::update()
 {
-  noInterrupts();
+
   if(enabled)
   {
     arming = false;
@@ -51,10 +53,15 @@ void AbstractServo::update()
     int range = highMicroseconds - lowMicroseconds;
     int totPower = (int)(lowMicroseconds + range * ((float)currentPower/(float)highRange));
     
+    totPower = max(LOW_RESPONSE, totPower);//Keep it just a hair above the low.
     
+    totPower = min(highMicroseconds, totPower); //Make sure to keep it low enough.
+          
     if(newVal && totPower != oldPower)
     {
+      noInterrupts();
       servoObj.writeMicroseconds(totPower);
+      interrupts();
       oldPower = totPower;
       newVal = false;
     }
@@ -65,7 +72,7 @@ void AbstractServo::update()
    //Do nothing. 
   }
   
-  interrupts();
+
   
   
 }
@@ -75,7 +82,7 @@ void AbstractServo::enable()
 {
  
   servoObj.attach(motorPin);
-  servoObj.writeMicroseconds(lowMicroseconds);
+  servoObj.writeMicroseconds(LOW_RESPONSE);
 
   arming = true;
 

@@ -23,7 +23,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <compat/twi.h>
-#include "Arduino.h" // for digitalWrite
+
 
 #ifndef cbi
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
@@ -119,7 +119,7 @@ uint8_t twi_readFrom(uint8_t address, uint8_t* data, uint8_t length)
   // wait until twi is ready, become master receiver
   twi_tout(1);//Ini TimeOut
   while(TWI_READY != twi_state){
-    if (twi_tout(0)) break;  
+    if (twi_tout(0)) break;      
     continue;
   }
   twi_state = TWI_MRX;
@@ -226,6 +226,26 @@ uint8_t twi_writeTo(uint8_t address, uint8_t* data, uint8_t length, uint8_t wait
     return 3;	// error: data send, nack received
   else
     return 4;	// other twi error
+}
+
+/* 
+ * Function twi_start
+ * Desc     fills slave tx buffer with data
+ *          must be called in slave tx event callback
+ * Output   -1 Not started 
+ *          0  Started
+ */
+uint8_t twi_start()
+{
+
+  if(TWI_READY == twi_state)
+  {
+    TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWEA) | _BV(TWINT) | _BV(TWSTA);
+    return 0;
+  }
+
+  return -1;
+
 }
 
 /* 

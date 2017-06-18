@@ -5,18 +5,9 @@
 
 using namespace std;
 
-#define Y_AXIS_CHANNEL 	0
-#define X_AXIS_CHANNEL	1
-
-#define ARM_CHANNEL	    6	
-#define DISARM_CHANNEL  7
-
-#define THROTTLE_CHANNEL  10
-
-#define THROTTLE_DOWN_CHANNEL 11
 
 /*Defined if the throttle is to be moved up one step every time throttle channel is active*/
-#define DISCRETE_THROTTLE 
+//#define DISCRETE_THROTTLE 
 
 #define THROTTLE_STEP 10
 
@@ -28,7 +19,13 @@ int8_t ControlsProcessing::throttleUpLast = 0;
 
 int8_t ControlsProcessing::throttleDownLast = 0;
 
-int8_t ControlsProcessing::throttleControl = 0;
+float ControlsProcessing::throttleControl = 0;
+
+int8_t ControlsProcessing::xAxisControl = 0;
+int8_t ControlsProcessing::yAxisControl = 0;
+int8_t ControlsProcessing::zAxisControl = 0;
+int8_t ControlsProcessing::armControl = 0;
+int8_t ControlsProcessing::disarmControl = 0;
 
 void ControlsProcessing::init()
 {
@@ -37,21 +34,65 @@ void ControlsProcessing::init()
 	
 }
 
+void ControlsProcessing::setParam(std::string tag, uint64_t val)
+{
+	
+
+	
+	if (tag == X_VECTOR_TAG)
+	{
+		float temp_float = reinterpret_cast<float &>(val);
+		xAxisControl = (MAX_CONTROL * temp_float);
+	}
+	else if (tag == Y_VECTOR_TAG)
+	{
+		float temp_float = reinterpret_cast<float &>(val);
+		yAxisControl = ((float)MAX_CONTROL * temp_float);
+	}
+	else if (tag == Z_VECTOR_TAG)
+	{	
+		float temp_float = reinterpret_cast<float &>(val);
+		zAxisControl = ((float)MAX_CONTROL * temp_float);
+	}
+	else if (tag == MAG_VECTOR_TAG)
+	{	
+		float temp_float = reinterpret_cast<float &>(val);
+		throttleControl = (temp_float/255) * 100.0f;//((float)MAX_CONTROL * temp_float);
+		cout << "Throttle: " << (float)throttleControl << endl;
+	}
+	else if (tag == VECTOR_TYPE_TAG)
+	{
+		//Unused.. for now.
+	}
+	else if (tag == ARM_TAG)
+	{
+		bool temp = reinterpret_cast<bool &>(val);
+		
+		armControl = temp ? 1 : 0;
+		
+	}
+	else if (tag == DISARM_TAG)
+	{
+		bool temp = reinterpret_cast<bool &>(val);
+		
+		disarmControl = temp ? 1 : 0;		
+		
+	}
+	
+	
+}
 
 void ControlsProcessing::update()
 {
 	
-	int8_t yAxisControl = Receiver::getChannel(Y_AXIS_CHANNEL);
+	/*int8_t yAxisControl = Receiver::getChannel(Y_AXIS_CHANNEL);
 	
 	int8_t xAxisControl = Receiver::getChannel(X_AXIS_CHANNEL);
 
 	int8_t armControl = Receiver::getChannel(ARM_CHANNEL);
 	
-	int8_t disarmControl = Receiver::getChannel(DISARM_CHANNEL);
+	int8_t disarmControl = Receiver::getChannel(DISARM_CHANNEL);*/
 	
-	
-	/*Y Axis control needs to be inversed before sending to the controller*/
-	yAxisControl = yAxisControl * -1;
 	
 	
 #ifdef DISCRETE_THROTTLE
@@ -86,7 +127,7 @@ void ControlsProcessing::update()
 
 #else
 
-	//TODO: implement
+	
 
 #endif
 	
@@ -114,6 +155,8 @@ void ControlsProcessing::update()
 	
 	CommandProcessing::setBasePower((float)throttleControl);
 
-	CommandProcessing::setOrientationVector(xAxisControl, yAxisControl, 100);	
+	CommandProcessing::setOrientationVector(xAxisControl, yAxisControl, zAxisControl);	
+	
+	cout << "<" << (int)xAxisControl << " , " << (int)yAxisControl << " , " << (int)zAxisControl << ">" << endl;
 	
 }

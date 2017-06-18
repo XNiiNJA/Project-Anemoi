@@ -62,6 +62,10 @@ class TwoWire : public Stream
     void onReceive( void (*)(int) );
     void onRequest( void (*)(void) );
   
+
+    //Take the bus while you can!
+    uint8_t reserveBus();
+
     using Print::write;
 };
 

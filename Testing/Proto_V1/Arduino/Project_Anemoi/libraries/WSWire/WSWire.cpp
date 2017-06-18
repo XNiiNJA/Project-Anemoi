@@ -21,8 +21,14 @@ extern "C" {
   #include <stdlib.h>
   #include <string.h>
   #include <inttypes.h>
-  #include "twi.h"
+  #include "utility/twi.h"
 }
+
+#if defined(ARDUINO) && ARDUINO >= 100
+  #include "Arduino.h"
+#else
+  #include "WProgram.h"
+#endif
 
 #include "WSWire.h"
 
@@ -62,6 +68,7 @@ void TwoWire::begin(void)
 
 void TwoWire::begin(uint8_t address)
 {
+  Serial.println("WS WIRE BEGIN");
   twi_setAddress(address);
   twi_attachSlaveTxEvent(onRequestService);
   twi_attachSlaveRxEvent(onReceiveService);
@@ -112,8 +119,8 @@ void TwoWire::beginTransmission(int address)
 uint8_t TwoWire::endTransmission(uint8_t sendStop)
 {
   // transmit buffer (blocking)
-  int8_t ret = twi_writeTo(txAddress, txBuffer, txBufferLength, sendStop);
-  // reset tx buffer iterator vars
+  int8_t ret = twi_writeTo(txAddress, txBuffer, txBufferLength, sendStop);  
+// reset tx buffer iterator vars
   txBufferIndex = 0;
   txBufferLength = 0;
   // indicate that we are done transmitting

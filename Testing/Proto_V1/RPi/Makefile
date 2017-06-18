@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-c -Wall 
+CFLAGS=-c -Wall -std=c++11 
 LDFLAGS=
 SOURCES=Receiver.cpp RPI_Connection_Manager.cpp ControlsProcessing.cpp CommandProcessing.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
