@@ -49,6 +49,7 @@ public class ChannelManager {
     
     static void setChannelValue(int id, byte value)
     {
+       if(id < channelValues.length)
         channelValues[id] = value;   
     }
           

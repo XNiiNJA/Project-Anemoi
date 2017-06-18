@@ -1,3 +1,5 @@
+All of these variables are put into a MsgPack map, sent to the other machine, converted to uint64_t, then converted to whatever type they actually are. MsgPack is weird.
+
 ### Flight Dynamics
 
 Vector X direction - "v_x"

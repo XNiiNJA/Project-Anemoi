@@ -1,0 +1,4 @@
+﻿  ControlsHandler.cpp
+c:\users\grant\projects\project-icarus\testing\proto_v1\pc\anemoi-drive-xinput\consoletest\controlshandler.cpp(78): warning C4018: '<': signed/unsigned mismatch
+  ConsoleTest.vcxproj -> C:\Users\Grant\Projects\Project-Icarus\Testing\Proto_V1\PC\Anemoi-Drive-XInput\ConsoleTest\Debug\ConsoleTest.exe
+  ConsoleTest.vcxproj -> C:\Users\Grant\Projects\Project-Icarus\Testing\Proto_V1\PC\Anemoi-Drive-XInput\ConsoleTest\Debug\ConsoleTest.pdb (Full PDB)
