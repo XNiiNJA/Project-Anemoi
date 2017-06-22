@@ -96,7 +96,7 @@ This will give a signed angle value.
 
 ##### Bring it all together
 
-error = targetAngle * radius * motorAngle
+error = (targetAngle * radius * motorAngle)/(|motorAngle| * pi)
 
 ### Section Four: High-Level Control Concepts Application
 
