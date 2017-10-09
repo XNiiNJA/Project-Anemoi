@@ -1,6 +1,12 @@
 # Project-Anemoi
 
-Operates on port ~~58511~~ 20303
+Before getting into the nitty gritty details of what is happening, there are a few key places that are most essential in this repository.
+
+[Proto_V1](https://github.com/XNiiNJA/Project-Anemoi/tree/master/Testing/Proto_V1) - This is the first (and current) prototype version. It involves three parts, a Visual Studio project to run on a PC, a Raspberry Pi project to run on a Raspberry Pi onboard the multicopter, and an Arduino project to run on a Arduino-compatible hardware that is also onboard the multicopter. This prototype version does not yet fly, most likely because the Arduino Uno can only run the control code at about 120 Hz. Plans to swap out the Uno with a Teensy are in the works. The Teensy is roughly 10 times faster than an Ardunio Uno, which bodes well for the project. I'm currently in school, and places to test experimental quadcopters are hard to come by. Especially if you are afraid that they might fly away. So this addition might take a while.
+
+[QuadSim](https://github.com/XNiiNJA/Project-Anemoi/tree/master/Sims/Unity3D/QuadSim) - This is a simulation project that runs in Unity. I have previous experience with Unity, and Simulink is scary, so I simulated the system in Unity to get a basic working model for the design. If you want to see it in action without setting up Unity, here is a [video](https://www.youtube.com/watch?v=xY62FwXtIA8). There are also "[Video Journals](https://www.youtube.com/playlist?list=PLpnAC5myUrbO_wqTg6kUb-8qc87o4eIy4)" of my progress on my YouTube channel as well.
+
+Okay, now into the guide!
 
 This guide outlines the underlying mathematics of the control scheme used in the Anemoi project. The mathematics used in this project heavily use 3d vectors, lines, planes, cross-products, dot products, and trigonometry. Previous knowledge of such concepts is advised; however this guide will offer quick refreshers when needed for every new concept. 
 
