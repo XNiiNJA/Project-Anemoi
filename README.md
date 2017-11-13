@@ -27,8 +27,6 @@ Note: PID controllers will also be used to yaw by using a tradeoff system to mak
 
 ### Section Three: Math
 
-First things first, buckle up. This might take a while to get through. 
-
 The mathematics used in this control scheme is designed with complete comprehensiveness in mind. However, that wasn't found to be completely achievable, which will be discussed further down. 
 
 The first concept that needs to be explained is that the target force vector is relative to the craft. If, for example, the craft is to go straight up in the global coordinate system, the vector will have to be translated to the craft's local coordinate system first. If the craft is facing upside down in this example, then the target force vector will be straight down relative to the craft. This guide does not discuss converting between local and global space yet. This functionality is implemented, it involves quaternions based on sensor input data. It's all quite complicated. If you're really curious, Google is a good source. The Proto_V1 Arduino code also has the _uncommented_ implementation if you're a masochist. 
